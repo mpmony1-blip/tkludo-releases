@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/admin/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TkLudo super admin panel.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="tkludo">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>TkLudo</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!--
+    The VPS that serves tkludo.site is in the US and its hosting proxy lets
+    each TCP connection move only ~8 KB/s to Bangladesh, so main.dart.js used
+    to take about two minutes. `scripts/deploy.sh` publishes the same build to
+    jsDelivr (~4 MB/s from Dhaka) and passes its URL as `--static-assets-url`;
+    web/flutter_bootstrap.js reads it from here and falls back to this origin
+    when the CDN does not answer. Plain `flutter build web` leaves "/" here,
+    which the bootstrap treats as "no CDN".
+
+    Nothing is preloaded: with HTTP/2 the whole page shares that one throttled
+    connection, so a preload of main.dart.js only starves the bootstrap.
+  -->
+  <script>window.tkludoStaticAssetsUrl = "https://cdn.jsdelivr.net/gh/mpmony1-blip/tkludo-releases@panel-20261005-212608/panel/";</script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
+  <style>
+    /* Inline so the splash paints on the first packet: a blank white page for
+       two minutes was the whole bug report. Colours follow AppColors. */
+    html, body { margin: 0; padding: 0; height: 100%; background: #06331C; }
+    #tk-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      background: #06331C;
+      color: #FFC93C;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      text-align: center;
+      padding: 0 16px;
+      transition: opacity .25s ease;
+      z-index: 9999;
+    }
+    #tk-splash.gone { opacity: 0; pointer-events: none; }
+    #tk-splash .mark { font-size: 30px; font-weight: 800; letter-spacing: .5px; }
+    #tk-splash .mark b { color: #F1FBF4; }
+    #tk-splash .ring {
+      width: 38px;
+      height: 38px;
+      border: 3px solid rgba(255, 201, 60, .25);
+      border-top-color: #FFC93C;
+      border-radius: 50%;
+      animation: tk-spin 1s linear infinite;
+    }
+    #tk-splash .note { font-size: 13px; color: #A7C8B3; max-width: 300px; line-height: 1.5; }
+    #tk-splash .slow { display: none; }
+    #tk-splash.slow .slow { display: block; }
+    @keyframes tk-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      #tk-splash .ring { animation-duration: 3s; }
+    }
+  </style>
+</head>
+<body>
+  <div id="tk-splash">
+    <div class="mark">Tk<b>Ludo</b></div>
+    <div class="ring"></div>
+    <div class="note">অ্যাডমিন প্যানেল লোড হচ্ছে…</div>
+    <div class="note slow">নেট ধীরে চলছে। প্যানেলটি এখনও নামছে — পেজ রিলোড করলে আবার শুরু হবে।</div>
+  </div>
+  <script>
+    // Shown only if the download really is crawling, so a slow link reads as
+    // "still working" instead of "broken".
+    (function () {
+      var splash = document.getElementById('tk-splash');
+      var slowTimer = setTimeout(function () { splash.classList.add('slow'); }, 12000);
+      // flutter_bootstrap.js calls this once the first frame is scheduled.
+      window.tkludoLoaded = function () {
+        clearTimeout(slowTimer);
+        splash.classList.add('gone');
+        setTimeout(function () { splash.remove(); }, 300);
+      };
+    })();
+  </script>
+  <!--
+    Customised in web/flutter_bootstrap.js (CDN entrypoint + splash hand-off).
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
