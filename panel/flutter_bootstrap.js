@@ -78,7 +78,7 @@ tkludoAssetBase().then((base) => {
     // only when a registration already exists — so it costs a new visitor
     // nothing while still cleaning up after older builds.
     serviceWorkerSettings: {
-      serviceWorkerVersion: "836676533" /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */,
+      serviceWorkerVersion: "1005006342" /* Flutter's service worker is deprecated and will be removed in a future Flutter release. */,
     },
     onEntrypointLoaded: async (engineInitializer) => {
       const appRunner = await engineInitializer.initializeEngine(config);
